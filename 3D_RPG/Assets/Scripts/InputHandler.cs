@@ -11,6 +11,10 @@ namespace SK
         public float mouseX;
         public float mouseY;
 
+        public bool b_Input;
+        public bool rollFlag;
+        public bool isInteracting;
+
         PlayerControls inputActions;
         CameraHandler cameraHandler;
 
@@ -38,8 +42,8 @@ namespace SK
             if (inputActions == null)
             {
                 inputActions = new PlayerControls();
-                inputActions.PlayerMovmenet.Movement.performed += inputActions => movementInput = inputActions.ReadValue<Vector2>();
-                inputActions.PlayerMovmenet.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
+                inputActions.PlayerMovemenet.Movement.performed += inputActions => movementInput = inputActions.ReadValue<Vector2>();
+                inputActions.PlayerMovemenet.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
             }
 
             inputActions.Enable();
@@ -54,6 +58,7 @@ namespace SK
         public void TickInput(float delta)
         {
             moveInput(delta);
+            HandleRollInput(delta);
         }
 
         private void moveInput(float delta)
@@ -63,6 +68,17 @@ namespace SK
             moveAmount = Mathf.Clamp01(Mathf.Abs(horizontal) + Mathf.Abs(vertical));
             mouseX = cameraInput.x;
             mouseY = cameraInput.y;
+        }
+
+        private void HandleRollInput(float delta)
+        {
+            b_Input = inputActions.PlayerActions.Roll.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
+
+            if (b_Input)
+            {
+                Debug.Log("KK");
+                rollFlag = true;
+            }
         }
 
     }
